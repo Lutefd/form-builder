@@ -1,5 +1,6 @@
 "use server";
 
+import { FormSchema, formSchema } from "@/schemas/form";
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
 
@@ -22,7 +23,7 @@ export async function GetFormStats() {
 
   const submissionRate = visits ? (submissions / visits) * 100 : 0;
 
-  const bounceRate = 100 - submissionRate;
+  const bounceRate = visits ? 100 - submissionRate : 0;
 
   return {
     visits,
@@ -30,4 +31,21 @@ export async function GetFormStats() {
     submissionRate,
     bounceRate,
   };
+}
+
+export async function CreateForm(data: FormSchema) {
+  const validation = formSchema.safeParse(data);
+  if (!validation.success) throw validation.error;
+  const session = await getServerAuthSession();
+  if (!session) throw new UserNotFoundErr();
+  const user = session.user;
+  const form = await db.form.create({
+    data: {
+      name: data.name,
+      description: data.description,
+      createdById: user.id,
+    },
+  });
+  if (!form) throw new Error("Falha ao criar formulário");
+  return form.id;
 }
