@@ -1,6 +1,6 @@
 "use server";
 
-import { FormSchema, formSchema } from "@/schemas/form";
+import { type FormSchema, formSchema } from "@/schemas/form";
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
 
@@ -48,4 +48,15 @@ export async function CreateForm(data: FormSchema) {
   });
   if (!form) throw new Error("Falha ao criar formulário");
   return form.id;
+}
+
+export async function GetForms() {
+  const session = await getServerAuthSession();
+  if (!session) throw new UserNotFoundErr();
+  const user = session.user;
+  const forms = await db.form.findMany({
+    where: { createdById: user.id },
+    orderBy: { createdAt: "desc" },
+  });
+  return forms;
 }
