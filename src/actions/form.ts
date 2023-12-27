@@ -60,3 +60,13 @@ export async function GetForms() {
   });
   return forms;
 }
+
+export async function GetFormById(id: string) {
+  const session = await getServerAuthSession();
+  if (!session) throw new UserNotFoundErr();
+  const user = session.user;
+  const form = await db.form.findFirst({
+    where: { id, createdById: user.id },
+  });
+  return form;
+}
