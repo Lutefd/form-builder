@@ -1,11 +1,11 @@
 import { GetFormStats } from "@/actions/form";
+import CreateFormBtn from "@/components/CreateFormBtn";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   LucideFormInput,
   LucideMousePointerClick,
-  LucideMousePointerSquareDashed,
   LucideRouteOff,
   LucideView,
 } from "lucide-react";
@@ -20,6 +20,7 @@ export default function HomePage() {
       <Separator className="my-6" />
       <h2 className="col-span-2 text-4xl font-bold"> Seus Formulários</h2>
       <Separator className="my-6" />
+      <CreateFormBtn />
     </div>
   );
 }
