@@ -13,7 +13,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,12 +22,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Loader2 } from "lucide-react";
+import { Loader2, LucideFilePlus } from "lucide-react";
 import { toast } from "./ui/use-toast";
 import { type FormSchema, formSchema } from "@/schemas/form";
 import { CreateForm } from "@/actions/form";
+import { useRouter } from "next/navigation";
 
 function CreateFormBtn() {
+  const router = useRouter();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
   });
@@ -39,7 +40,7 @@ function CreateFormBtn() {
         title: "Formulário criado",
         description: "Seu formulário foi criado com sucesso.",
       });
-      console.log(formId);
+      router.push(`/form-builder/${formId}`);
     } catch (error) {
       toast({
         title: "Erro ao criar formulário",
@@ -52,7 +53,12 @@ function CreateFormBtn() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Criar novo formulário</Button>
+        <Button className="group flex h-[190px] flex-col items-center justify-center gap-4 border border-dashed border-primary/20 bg-background hover:cursor-pointer hover:border-primary hover:bg-background">
+          <LucideFilePlus className="group-hover: h-8 w-8 text-muted-foreground group-hover:text-primary" />
+          <p className="text-xl font-bold text-muted-foreground group-hover:text-primary">
+            Criar novo formulário
+          </p>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
