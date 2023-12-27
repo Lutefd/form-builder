@@ -58,7 +58,7 @@ function StatsCards({ loading, data }: StatsCardsProps) {
         title="Taxa de Envios"
         icon={<LucideMousePointerClick className="text-green-600" />}
         helperText="Visitas que resultaram em submissões"
-        value={data?.submissionRate.toLocaleString() ?? ""}
+        value={`${data?.submissionRate.toLocaleString()}%` ?? "0%"}
         loading={loading}
         className="shadow-md shadow-green-600"
       />
@@ -66,7 +66,7 @@ function StatsCards({ loading, data }: StatsCardsProps) {
         title="Taxa de Rejeição"
         icon={<LucideRouteOff className="text-red-600" />}
         helperText="Visitas que não interagiram com os formulários"
-        value={data?.bounceRate.toLocaleString() ?? ""}
+        value={`${data?.bounceRate.toLocaleString()}%` ?? "0%"}
         loading={loading}
         className="shadow-md shadow-red-600"
       />
