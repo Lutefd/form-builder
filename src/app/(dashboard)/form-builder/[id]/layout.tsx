@@ -4,7 +4,7 @@ import { type ReactNode } from "react";
 function layout({ children }: { children: ReactNode }) {
   return (
     <DesignerContextProvider>
-      <div className="mx-auto flex w-full flex-grow">{children}</div>;
+      <div className="mx-auto flex w-full flex-grow">{children}</div>
     </DesignerContextProvider>
   );
 }
