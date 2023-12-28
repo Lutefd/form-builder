@@ -73,8 +73,19 @@ async function BuilderPage({
           className="shadow-md shadow-red-600"
         />
       </div>
+      <div className="container pt-10">
+        <SubmissionsTable id={form.id} />
+      </div>
     </>
   );
 }
 
 export default BuilderPage;
+
+function SubmissionsTable({ id }: { id: string }) {
+  return (
+    <>
+      <h1 className="my-4 text-2xl font-bold">Envios</h1>
+    </>
+  );
+}
