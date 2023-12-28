@@ -34,6 +34,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Switch } from "../ui/switch";
 import { CalendarDays } from "lucide-react";
+import { ptBR } from "date-fns/locale";
 
 const type: ElementsType = "DateField";
 
@@ -149,7 +150,13 @@ function FormComponent({
             )}
           >
             <CalendarDays className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : <span>Selecione uma Data</span>}
+            {date ? (
+              format(date, "PPP", {
+                locale: ptBR,
+              })
+            ) : (
+              <span>Selecione uma Data</span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -160,7 +167,7 @@ function FormComponent({
               setDate(date);
 
               if (!submitValue) return;
-              const value = date?.toUTCString() || "";
+              const value = date?.toUTCString() ?? "";
               const valid = DateFieldFormElement.validate(element, value);
               setError(!valid);
               submitValue(element.id, value);
