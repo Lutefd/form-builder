@@ -81,3 +81,19 @@ export async function UpdateFormContent(id: string, JSONContent: string) {
   });
   return form;
 }
+
+export async function PublishForm(id: string, JSONContent: string) {
+  const session = await getServerAuthSession();
+  if (!session) throw new UserNotFoundErr();
+  const user = session.user;
+  return await db.form.update({
+    data: {
+      published: true,
+      content: JSONContent,
+    },
+    where: {
+      createdById: user.id,
+      id,
+    },
+  });
+}
