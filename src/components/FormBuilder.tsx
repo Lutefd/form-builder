@@ -16,7 +16,12 @@ import {
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import useDesigner from "./hooks/useDesigner";
 import type { FormElementInstance } from "./FormElements";
-import { Loader, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader, Loader2 } from "lucide-react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { toast } from "./ui/use-toast";
+import Link from "next/link";
+import { env } from "@/env";
 
 function FormBuilder({ form }: { form: Form }) {
   const { setElements } = useDesigner();
@@ -43,6 +48,54 @@ function FormBuilder({ form }: { form: Form }) {
     setIsReady(true);
   }, [form, setElements, isReady]);
 
+  const shareUrl = `${env.NEXT_PUBLIC_WEBSITE_URL}/published-forms/${form.ShareURL}`;
+
+  if (form.published) {
+    return (
+      <>
+        <div className="flex h-full w-full flex-col items-center justify-center">
+          <div className="max-w-md">
+            <h1 className="mb-10 border-b pb-2 text-center text-4xl font-bold text-primary">
+              Formulário Publicado
+            </h1>
+            <h3 className="border-b pb-10 text-xl text-muted-foreground">
+              Qualquer pessoa com o link abaixo pode acessar o formulário
+            </h3>
+            <div className="my-4 flex w-full flex-col items-center gap-2 border-b pb-4">
+              <Input className="w-full" readOnly value={shareUrl} />
+              <Button
+                className="mt-2 w-full"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(shareUrl);
+                  toast({
+                    title: "Copiado!",
+                    description: "Link copiado para a área de transferência.",
+                  });
+                }}
+              >
+                Copy link
+              </Button>
+            </div>
+            <div className="flex justify-between">
+              <Button variant={"link"} asChild>
+                <Link href={"/"} className="gap-2">
+                  <ArrowLeft />
+                  Voltar para o dashboard
+                </Link>
+              </Button>
+              <Button variant={"link"} asChild>
+                <Link href={`/forms/${form.id}`} className="gap-2">
+                  Detalhes do formulário
+                  <ArrowRight />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <DndContext sensors={sensors} id="dnd-context">
       <main className="flex w-full flex-col">
@@ -58,7 +111,7 @@ function FormBuilder({ form }: { form: Form }) {
             {!form.published && (
               <>
                 <SaveFormBtn id={form.id} />
-                <PublishFormBtn />
+                <PublishFormBtn id={form.id} />
               </>
             )}
           </div>
