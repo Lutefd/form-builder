@@ -97,3 +97,38 @@ export async function PublishForm(id: string, JSONContent: string) {
     },
   });
 }
+
+export async function GetFormContentByUrl(formUrl: string) {
+  return await db.form.update({
+    select: {
+      content: true,
+    },
+    data: {
+      visits: {
+        increment: 1,
+      },
+    },
+    where: {
+      ShareURL: formUrl,
+    },
+  });
+}
+
+export async function SubmitForm(formUrl: string, content: string) {
+  return await db.form.update({
+    data: {
+      submissions: {
+        increment: 1,
+      },
+      FormSubmissions: {
+        create: {
+          content,
+        },
+      },
+    },
+    where: {
+      ShareURL: formUrl,
+      published: true,
+    },
+  });
+}
