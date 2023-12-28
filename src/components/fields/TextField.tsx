@@ -64,13 +64,14 @@ export const TextFieldFormElement: FormElement = {
   },
 
   designerComponent: DesignerComponent,
-  formComponent: () => <div>Componente </div>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
 };
 
 type CustomInstance = FormElementInstance & {
   extraAttributes: typeof extraAttributes;
 };
+type propertiesFormSchema = z.infer<typeof propertiesSchema>;
 
 function DesignerComponent({
   elementInstance,
@@ -92,7 +93,6 @@ function DesignerComponent({
     </div>
   );
 }
-type propertiesFormSchema = z.infer<typeof propertiesSchema>;
 
 function PropertiesComponent({
   elementInstance,
@@ -222,5 +222,26 @@ function PropertiesComponent({
         />
       </form>
     </Form>
+  );
+}
+
+function FormComponent({
+  elementInstance,
+}: {
+  elementInstance: FormElementInstance;
+}) {
+  const element = elementInstance as CustomInstance;
+  const { label, placeholder, helperText, required } = element.extraAttributes;
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <Label>
+        {label}
+        {required && <span className="text-red-500">*</span>}
+      </Label>
+      <Input placeholder={placeholder}></Input>
+      {helperText && (
+        <p className="text-[0.8rem] text-muted-foreground">{helperText}</p>
+      )}
+    </div>
   );
 }
