@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use server";
 
 import { type FormSchema, formSchema } from "@/schemas/form";
@@ -75,9 +76,10 @@ export async function UpdateFormContent(id: string, JSONContent: string) {
   const session = await getServerAuthSession();
   if (!session) throw new UserNotFoundErr();
   const user = session.user;
+  const JSONRaw = JSON.parse(JSONContent);
   const form = await db.form.update({
     where: { id, createdById: user.id },
-    data: { content: JSONContent },
+    data: { content: JSONRaw },
   });
   return form;
 }
@@ -86,10 +88,12 @@ export async function PublishForm(id: string, JSONContent: string) {
   const session = await getServerAuthSession();
   if (!session) throw new UserNotFoundErr();
   const user = session.user;
+  const JSONRaw = JSON.parse(JSONContent);
+
   return await db.form.update({
     data: {
       published: true,
-      content: JSONContent,
+      content: JSONRaw,
     },
     where: {
       createdById: user.id,

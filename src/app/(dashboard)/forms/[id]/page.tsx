@@ -21,8 +21,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ptBR } from "date-fns/locale";
-import { formatDistance } from "date-fns";
+import { format, formatDistance } from "date-fns";
 import { type ReactNode } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 
 async function BuilderPage({
   params,
@@ -107,7 +109,7 @@ async function SubmissionsTable({ id }: { id: string }) {
     throw new Error("Formulário não encontrado");
   }
 
-  const formElements = JSON.parse(form.content) as FormElementInstance[];
+  const formElements = form.content as FormElementInstance[];
 
   const columns: {
     id: string;
@@ -118,12 +120,19 @@ async function SubmissionsTable({ id }: { id: string }) {
   formElements.forEach((element) => {
     switch (element.type) {
       case "TextField":
+      case "NumberField":
+      case "TextAreaField":
+      case "DateField":
+      case "SelectField":
+      case "CheckboxField":
         columns.push({
           id: element.id,
           label: element.extraAttributes?.label as string,
           required: element.extraAttributes?.required as boolean,
           type: element.type,
         });
+        break;
+      default:
         break;
     }
   });
@@ -177,6 +186,19 @@ async function SubmissionsTable({ id }: { id: string }) {
 }
 
 function RowCell({ type, value }: { type: ElementsType; value: string }) {
-  const node: ReactNode = value;
+  let node: ReactNode = value;
+
+  switch (type) {
+    case "DateField":
+      if (!value) break;
+      const date = new Date(value);
+      node = <Badge variant={"outline"}>{format(date, "dd/MM/yyyy")}</Badge>;
+      break;
+    case "CheckboxField":
+      const checked = value === "true";
+      node = <Checkbox checked={checked} disabled />;
+      break;
+  }
+
   return <TableCell>{node}</TableCell>;
 }

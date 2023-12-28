@@ -5,7 +5,7 @@ import { Separator } from "./ui/separator";
 
 function FormElementsSidebar() {
   return (
-    <div className="bar-t">
+    <div className="">
       <p className="text-sm text-foreground/70">Elementos de Drag and Drop</p>
       <Separator className="my-2" />
       <div className="grid grid-cols-1 place-items-center gap-2 md:grid-cols-2">

@@ -57,3 +57,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+.bar-t::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bar-t::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+.bar-t::-webkit-scrollbar-thumb {
+  @apply bg-foreground/30;
+  border-radius: 10px;
+}
+
+.your-class::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

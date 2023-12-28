@@ -8,7 +8,7 @@ async function SubmitPage({ params }: { params: { formUrl: string } }) {
   if (!form) {
     throw new Error("Formulário não encontrado");
   }
-  const formContent = JSON.parse(form.content) as FormElementInstance[];
+  const formContent = form.content as FormElementInstance[];
   return <FormSubmitComponent formUrl={params.formUrl} content={formContent} />;
 }
 

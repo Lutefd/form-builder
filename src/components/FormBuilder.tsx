@@ -43,7 +43,7 @@ function FormBuilder({ form }: { form: Form }) {
 
   useEffect(() => {
     if (isReady) return;
-    const elements = JSON.parse(form.content) as FormElementInstance[];
+    const elements = form.content as FormElementInstance[];
     setElements(elements);
     setIsReady(true);
   }, [form, setElements, isReady]);
@@ -73,7 +73,7 @@ function FormBuilder({ form }: { form: Form }) {
                   });
                 }}
               >
-                Copy link
+                Copiar Link
               </Button>
             </div>
             <div className="flex justify-between">
