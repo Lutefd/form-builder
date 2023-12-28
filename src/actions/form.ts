@@ -70,3 +70,14 @@ export async function GetFormById(id: string) {
   });
   return form;
 }
+
+export async function UpdateFormContent(id: string, JSONContent: string) {
+  const session = await getServerAuthSession();
+  if (!session) throw new UserNotFoundErr();
+  const user = session.user;
+  const form = await db.form.update({
+    where: { id, createdById: user.id },
+    data: { content: JSONContent },
+  });
+  return form;
+}
