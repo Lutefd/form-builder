@@ -14,11 +14,21 @@ import { Button } from "./ui/button";
 import { LucideTrash } from "lucide-react";
 interface Current {
   isDesignerBtnElement: boolean;
+  isDesignerElementBottomHalf: boolean;
+  isDesignerElementTopHalf: boolean;
+  isDesignerElement: boolean;
+  isDesignerDropArea: boolean;
   type: ElementsType;
+  elementId: string;
 }
 function Designer() {
-  const { elements, addElement, selectedElement, setSelectedElement } =
-    useDesigner();
+  const {
+    elements,
+    addElement,
+    selectedElement,
+    setSelectedElement,
+    removeElement,
+  } = useDesigner();
 
   const droppable = useDroppable({
     id: "designer-drop-area",
@@ -32,11 +42,78 @@ function Designer() {
       if (!active || !over) return;
       const isDesignerBtnElement = (active.data?.current as Current)
         .isDesignerBtnElement;
-      if (isDesignerBtnElement) {
+      const isDroppingOverDesignerDropArea = (over.data?.current as Current)
+        .isDesignerDropArea;
+
+      if (isDesignerBtnElement && isDroppingOverDesignerDropArea) {
         const type = (active.data?.current as Current).type;
         const newElement =
           FormElements[type as ElementsType].construct(idGenerator());
-        addElement(0, newElement);
+        addElement(elements.length, newElement);
+        return;
+      }
+
+      //second
+
+      const isDroppingOverDesignerElementTopHalf = (
+        over.data?.current as Current
+      ).isDesignerElementTopHalf;
+
+      const isDroppingOverDesignerElementBottomHalf = (
+        over.data?.current as Current
+      ).isDesignerElementBottomHalf;
+
+      const isDroppingOverDesignerElement =
+        isDroppingOverDesignerElementTopHalf ||
+        isDroppingOverDesignerElementBottomHalf;
+
+      const droppingSidebarBtnOverDesignerElement =
+        isDesignerBtnElement && isDroppingOverDesignerElement;
+
+      // Second scenario
+      if (droppingSidebarBtnOverDesignerElement) {
+        const type = (active.data?.current as Current).type;
+        const newElement =
+          FormElements[type as ElementsType].construct(idGenerator());
+
+        const overId = (over.data?.current as Current).elementId;
+
+        const overElementIndex = elements.findIndex((el) => el.id === overId);
+        if (overElementIndex === -1) {
+          throw new Error("element not found");
+        }
+        let indexForNewElement = overElementIndex;
+        if (isDroppingOverDesignerElementBottomHalf) {
+          indexForNewElement = overElementIndex + 1;
+        }
+
+        addElement(indexForNewElement, newElement);
+        return;
+      }
+      //Third Scenario
+      const isDraggingDesignerElement = (active.data?.current as Current)
+        .isDesignerElement;
+      const draggingDesignerElementOverOtherDesignerElement =
+        isDroppingOverDesignerElement && isDraggingDesignerElement;
+      if (draggingDesignerElementOverOtherDesignerElement) {
+        const activeId = (active.data?.current as Current).elementId;
+
+        const overId = (over.data?.current as Current).elementId;
+        const activeElementIndex = elements.findIndex(
+          (el) => el.id === activeId,
+        );
+
+        const overElementIndex = elements.findIndex((el) => el.id === overId);
+        if (activeElementIndex === -1 || overElementIndex === -1) {
+          throw new Error("element not found");
+        }
+
+        const activeElement = {
+          ...elements[activeElementIndex],
+        } as FormElementInstance;
+
+        removeElement(activeId);
+        addElement(overElementIndex, activeElement);
       }
     },
   });
