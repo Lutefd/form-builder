@@ -79,7 +79,7 @@ model Form {
   visits      Int @default(0)
   submissions Int @default(0)
 
-  ShareURL String @default("")
+  ShareURL String @unique @default(cuid())
 
   createdBy   User   @relation(fields: [createdById], references: [id])
   createdById String
