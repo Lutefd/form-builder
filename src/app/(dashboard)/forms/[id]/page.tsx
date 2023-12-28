@@ -1,4 +1,4 @@
-import { GetFormById } from "@/actions/form";
+import { GetFormById, GetFormWithSubmissions } from "@/actions/form";
 import FormLinkShare from "@/components/FormLinkShare";
 import VisitBtn from "@/components/VisitBtn";
 import { StatsCard } from "../../page";
@@ -8,6 +8,21 @@ import {
   LucideRouteOff,
   LucideView,
 } from "lucide-react";
+import {
+  type ElementsType,
+  type FormElementInstance,
+} from "@/components/FormElements";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ptBR } from "date-fns/locale";
+import { formatDistance } from "date-fns";
+import { type ReactNode } from "react";
 
 async function BuilderPage({
   params,
@@ -82,10 +97,86 @@ async function BuilderPage({
 
 export default BuilderPage;
 
-function SubmissionsTable({ id }: { id: string }) {
+type Row = Record<string, string | Date> & {
+  submittedAt: Date;
+};
+
+async function SubmissionsTable({ id }: { id: string }) {
+  const form = await GetFormWithSubmissions(id);
+  if (!form) {
+    throw new Error("Formulário não encontrado");
+  }
+
+  const formElements = JSON.parse(form.content) as FormElementInstance[];
+
+  const columns: {
+    id: string;
+    label: string;
+    required: boolean;
+    type: ElementsType;
+  }[] = [];
+  formElements.forEach((element) => {
+    switch (element.type) {
+      case "TextField":
+        columns.push({
+          id: element.id,
+          label: element.extraAttributes?.label as string,
+          required: element.extraAttributes?.required as boolean,
+          type: element.type,
+        });
+        break;
+    }
+  });
+  const rows: Row[] = [];
+  form.FormSubmissions.forEach((submission) => {
+    const content = JSON.parse(submission.content) as Record<string, string>;
+    rows.push({
+      ...content,
+      submittedAt: submission.createdAt,
+    });
+  });
   return (
     <>
       <h1 className="my-4 text-2xl font-bold">Envios</h1>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.id} className="uppercase">
+                  {column.label}
+                </TableHead>
+              ))}
+              <TableHead className="text-right uppercase text-muted-foreground">
+                Enviado há
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                {columns.map((column) => (
+                  <RowCell
+                    key={column.id}
+                    type={column.type}
+                    value={row[column.id] as string}
+                  />
+                ))}
+                <TableCell className="text-right">
+                  {formatDistance(new Date(row.submittedAt), new Date(), {
+                    locale: ptBR,
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </>
   );
+}
+
+function RowCell({ type, value }: { type: ElementsType; value: string }) {
+  const node: ReactNode = value;
+  return <TableCell>{node}</TableCell>;
 }
