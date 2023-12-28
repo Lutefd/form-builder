@@ -17,7 +17,9 @@ interface Current {
   type: ElementsType;
 }
 function Designer() {
-  const { elements, addElement } = useDesigner();
+  const { elements, addElement, selectedElement, setSelectedElement } =
+    useDesigner();
+
   const droppable = useDroppable({
     id: "designer-drop-area",
     data: {
@@ -40,7 +42,12 @@ function Designer() {
   });
   return (
     <div className="flex h-full w-full">
-      <div className="w-full p-4">
+      <div
+        className="w-full p-4"
+        onClick={() => {
+          if (selectedElement) setSelectedElement(null);
+        }}
+      >
         <div
           ref={droppable.setNodeRef}
           className={cn(
@@ -74,7 +81,7 @@ function Designer() {
 
 function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
   const DesignerElement = FormElements[element.type].designerComponent;
-  const { removeElement } = useDesigner();
+  const { removeElement, selectedElement, setSelectedElement } = useDesigner();
   const [mouseOver, setMouseOver] = useState(false);
   const topHalf = useDroppable({
     id: `designer-element-${element.id}-top-half`,
@@ -114,6 +121,10 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       }}
       onMouseLeave={() => {
         setMouseOver(false);
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setSelectedElement(element);
       }}
     >
       <div
