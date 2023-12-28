@@ -14,7 +14,7 @@ function VisitBtn({ shareUrl }: { shareUrl: string }) {
     return null;
   }
 
-  const shareLink = `${window.location.origin}/submit/${shareUrl}`;
+  const shareLink = `${window.location.origin}/published-forms/${shareUrl}`;
   return (
     <Button
       className="w-[213px]"
