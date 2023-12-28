@@ -132,3 +132,19 @@ export async function SubmitForm(formUrl: string, content: string) {
     },
   });
 }
+
+export async function GetFormWithSubmissions(id: string) {
+  const session = await getServerAuthSession();
+  if (!session) throw new UserNotFoundErr();
+  const user = session.user;
+
+  return await db.form.findUnique({
+    where: {
+      createdById: user.id,
+      id,
+    },
+    include: {
+      FormSubmissions: true,
+    },
+  });
+}
