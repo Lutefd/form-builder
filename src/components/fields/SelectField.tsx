@@ -49,10 +49,21 @@ const extraAttributes = {
 };
 
 const propertiesSchema = z.object({
-  label: z.string().min(2).max(50),
-  helperText: z.string().max(200),
+  label: z
+    .string()
+    .min(2, {
+      message: "A label deve ter no minimo 2 caracteres",
+    })
+    .max(50, {
+      message: "A label deve ter no máximo 50 caracteres",
+    }),
+  helperText: z.string().max(200, {
+    message: "O texto auxiliar deve ter no máximo 200 caracteres",
+  }),
   required: z.boolean().default(false),
-  placeHolder: z.string().max(50),
+  placeHolder: z.string().max(50, {
+    message: "O placeholder deve ter no máximo 50 caracteres",
+  }),
   options: z.array(z.string()).default([]),
 });
 
@@ -239,7 +250,7 @@ function PropertiesComponent({
                 />
               </FormControl>
               <FormDescription>
-                O label do campo. <br /> Vai ser exibido acima do campo.
+                A label do campo. <br /> Vai ser exibido acima do campo.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -269,7 +280,7 @@ function PropertiesComponent({
           name="helperText"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Helper text</FormLabel>
+              <FormLabel>Texto Auxiliar</FormLabel>
               <FormControl>
                 <Input
                   {...field}

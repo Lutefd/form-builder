@@ -30,7 +30,14 @@ const extraAttributes = {
 };
 
 const propertiesSchema = z.object({
-  title: z.string().min(2).max(50),
+  title: z
+    .string()
+    .min(2, {
+      message: "O subtítulo deve ter pelo menos 2 caracteres",
+    })
+    .max(50, {
+      message: "O subtítulo deve ter no máximo 50 caracteres",
+    }),
 });
 
 export const SubTitleFieldFormElement: FormElement = {
@@ -126,7 +133,7 @@ function PropertiesComponent({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Subtítulo</FormLabel>
               <FormControl>
                 <Input
                   {...field}

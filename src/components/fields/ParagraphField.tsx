@@ -30,7 +30,14 @@ const extraAttributes = {
 };
 
 const propertiesSchema = z.object({
-  text: z.string().min(2).max(500),
+  text: z
+    .string()
+    .min(2, {
+      message: "O parágrafo deve ter pelo menos 2 caracteres",
+    })
+    .max(500, {
+      message: "O parágrafo deve ter no máximo 500 caracteres",
+    }),
 });
 
 export const ParagprahFieldFormElement: FormElement = {
@@ -126,7 +133,7 @@ function PropertiesComponent({
           name="text"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Text</FormLabel>
+              <FormLabel>Texto</FormLabel>
               <FormControl>
                 <Textarea
                   rows={5}

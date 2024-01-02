@@ -31,7 +31,14 @@ const extraAttributes = {
 };
 
 const propertiesSchema = z.object({
-  height: z.number().min(5).max(200),
+  height: z
+    .number()
+    .min(5, {
+      message: "A altura deve ser no mínimo 5px",
+    })
+    .max(200, {
+      message: "A altura deve ser no máximo 200px",
+    }),
 });
 
 export const SpacerFieldFormElement: FormElement = {
@@ -127,7 +134,7 @@ function PropertiesComponent({
           name="height"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Height (px): {form.watch("height")}</FormLabel>
+              <FormLabel>Altura (px): {form.watch("height")}</FormLabel>
               <FormControl className="pt-2">
                 <Slider
                   defaultValue={[field.value]}

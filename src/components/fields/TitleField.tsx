@@ -30,7 +30,14 @@ const extraAttributes = {
 };
 
 const propertiesSchema = z.object({
-  title: z.string().min(2).max(50),
+  title: z
+    .string()
+    .min(2, {
+      message: "O título deve ter pelo menos 2 caracteres",
+    })
+    .max(50, {
+      message: "O título deve ter no máximo 50 caracteres",
+    }),
 });
 
 export const TitleFieldFormElement: FormElement = {
