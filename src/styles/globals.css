@@ -70,7 +70,3 @@
   @apply bg-foreground/30;
   border-radius: 10px;
 }
-
-.your-class::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}

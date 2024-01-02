@@ -85,7 +85,7 @@ function FormSubmitComponent({
     <div className="flex h-full w-full items-center justify-center p-8">
       <div
         key={renderKey}
-        className="flex w-full max-w-[620px] flex-grow flex-col gap-4 overflow-y-auto rounded border bg-background p-8 "
+        className="bar-t flex w-full max-w-[620px] flex-grow flex-col gap-4 overflow-y-auto rounded border bg-background p-8 "
       >
         {content.map((element) => {
           const FormElement = FormElements[element.type].formComponent;
