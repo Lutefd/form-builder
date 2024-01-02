@@ -57,6 +57,7 @@ model User {
   sessions      Session[]
   posts         Post[]
   forms         Form[]
+  workflows     Workflow[]
 }
 
 model VerificationToken {
@@ -99,4 +100,17 @@ model FormSubissions {
   formId String
 
   @@index([formId])
+}
+
+model Workflow {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  content   Json     @default("[]")
+
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String
+
+  @@index([createdById])
 }
