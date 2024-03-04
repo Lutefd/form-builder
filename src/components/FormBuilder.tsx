@@ -16,12 +16,11 @@ import {
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import useDesigner from "./hooks/useDesigner";
 import type { FormElementInstance } from "./FormElements";
-import { ArrowLeft, ArrowRight, Loader, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 import Link from "next/link";
-import { env } from "@/env";
 
 function FormBuilder({ form }: { form: Form }) {
   const { setElements } = useDesigner();
@@ -48,7 +47,7 @@ function FormBuilder({ form }: { form: Form }) {
     setIsReady(true);
   }, [form, setElements, isReady]);
 
-  const shareUrl = `${env.NEXT_PUBLIC_WEBSITE_URL}/published-forms/${form.ShareURL}`;
+  const shareUrl = `${window.location.origin}/published-forms/${form.ShareURL}`;
 
   if (form.published) {
     return (
